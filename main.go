@@ -54,36 +54,40 @@ func multipleDatabaseCalls() Response {
 func functionWithHardTimeLimit() Response {
 	log.Println("Starting functionWithHardTimeLimit")
 
+	// Time in seconds that Lambda will be killed after
 	maxDuration := 10
-	runTime := randomTime()
 
-	responseTime := time.Duration(runTime)
+	// Randomize if run time will exceed max allowed run time
+	// runTime can randomly take between 1 and 19 seconds
+	// ok will return false if Runtime is longer than Max Duration
+	runTime, ok := randomTime(maxDuration)
 
-	// Simulated failed call
-	if runTime >= maxDuration {
+	if !ok {
+		// Simulated failed call
 		time.Sleep(10 * time.Second)
 		log.Println("Function took too long and timed out. No response")
-		return Response{
-			Runtime: 0,
-			Result:  "",
-		}
-
-		// Simulated successful response
+		return Response{}
 	} else {
-		time.Sleep(responseTime * time.Second)
+		// Simulated successful response
+		time.Sleep(time.Duration(runTime) * time.Second)
 		return Response{
-			Runtime: responseTime * time.Second,
+			Runtime: time.Duration(runTime) * time.Second,
 			Result:  "Database Result returned successfully",
 		}
 	}
 
 }
 
-func randomTime() int {
+func randomTime(maxDuration int) (int, bool) {
 	var src cryptoSource
 	rnd := rand.New(src)
-	number := rnd.Intn(20)
-	return number
+	runTime := rnd.Intn(20)
+
+	if runTime > maxDuration {
+		return runTime, false
+	}
+
+	return runTime, true
 }
 
 type cryptoSource struct{}
