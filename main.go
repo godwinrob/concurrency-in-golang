@@ -95,7 +95,6 @@ func functionWithHardTimeLimit() (Response, error) {
 		Runtime: time.Duration(runTime) * time.Second,
 		Result:  "Database Result returned successfully",
 	}, nil
-
 }
 
 func randomTime(maxDuration int) (int, bool) {
