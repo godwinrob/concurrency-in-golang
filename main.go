@@ -5,6 +5,7 @@ import (
 	"encoding/binary"
 	"log"
 	rand "math/rand"
+	"sync"
 	"time"
 )
 
@@ -29,20 +30,36 @@ func multipleDatabaseCalls() Response {
 	log.Println("Starting multipleDatabaseCalls")
 	start := time.Now()
 
+	var wg sync.WaitGroup
+	wg.Add(3)
+
 	results := ""
 
-	// "DB call 1"
-	time.Sleep(8 * time.Second)
-	log.Println("Result set 1 returned")
-	results += "'db call 1 result set' "
-	// "DB call 2"
-	time.Sleep(4 * time.Second)
-	log.Println("Result set 2 returned")
-	results += "'db call 2 result set' "
-	// "DB call 3"
-	time.Sleep(9 * time.Second)
-	log.Println("Result set 3 returned")
-	results += "'db call 3 result set' "
+	go func() {
+		// "DB call 1"
+		time.Sleep(8 * time.Second)
+		log.Println("Result set 1 returned")
+		results += "'db call 1 result set' "
+		wg.Done()
+	}()
+
+	go func() {
+		// "DB call 2"
+		time.Sleep(4 * time.Second)
+		log.Println("Result set 2 returned")
+		results += "'db call 2 result set' "
+		wg.Done()
+	}()
+
+	go func() {
+		// "DB call 3"
+		time.Sleep(9 * time.Second)
+		log.Println("Result set 3 returned")
+		results += "'db call 3 result set' "
+		wg.Done()
+	}()
+
+	wg.Wait()
 
 	return Response{
 		Result:  results,
