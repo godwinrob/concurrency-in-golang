@@ -102,8 +102,8 @@ func functionWithHardTimeLimit() (Response, error) {
 	select {
 	case <-time.After(9 * time.Second):
 		return Response{
-			ErrorMessage: errors.New("Function reached timeout limit and returned"),
-		}, errors.New("Function timed out.")
+			ErrorMessage: errors.New("function reached timeout limit and returned"),
+		}, errors.New("function timed out")
 	case result := <-result:
 		return Response{
 			Result:  result.Response.Result,
