@@ -27,6 +27,8 @@ func main() {
 		log.Printf("time to complete: %s", result1.Runtime)
 	}
 
+	time.Sleep(2 * time.Second)
+
 	// Simulate a call to a function that will get killed after 10 seconds runtime
 	result2, err := functionWithHardTimeLimit()
 	if err != nil {
