@@ -89,19 +89,22 @@ func functionWithHardTimeLimit() (Response, error) {
 func database1() string {
 	log.Println("calling db 1")
 	time.Sleep(8 * time.Second)
-	return "Result set 1 returned"
+	log.Println("db 1 result set returned")
+	return "'db 1 result set '"
 }
 
 func database2() string {
-	log.Println("calling db 1")
+	log.Println("calling db 2")
 	time.Sleep(4 * time.Second)
-	return "Result set 2 returned"
+	log.Println("db 2 result set returned")
+	return "'db 2 result set '"
 }
 
 func database3() string {
 	log.Println("calling db 3")
 	time.Sleep(9 * time.Second)
-	return "Result set 3 returned"
+	log.Println("db 3 result set returned")
+	return "'db 3 result set '"
 }
 
 func randomTime(maxDuration int) (int, bool) {
