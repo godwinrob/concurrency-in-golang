@@ -2,9 +2,11 @@
 
 ## The Situation
  
-We have two functions in need of a refactor to improve our web API.
+* We have two functions in need of a refactor to improve our web API.
 
-For a solution we only want to use Go's standard library.
+* The functions must conform to an existing interface, so their signature cannot be changed.
+
+* For this solution we only want to use Go's standard library.
 
 ### Go Waitgroups
 ```func multipleDatabaseCalls()```
