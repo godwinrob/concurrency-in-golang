@@ -47,23 +47,10 @@ func multipleDatabaseCalls() (Response, error) {
 
 	results := ""
 
-	// "DB call 1"
-	log.Println("calling db 1")
-	time.Sleep(8 * time.Second)
-	log.Println("Result set 1 returned")
-	results += "'db 1 result set' "
-
-	// "DB call 2"
-	log.Println("calling db 2")
-	time.Sleep(4 * time.Second)
-	log.Println("Result set 2 returned")
-	results += "'db 2 result set' "
-
-	// "DB call 3"
-	log.Println("calling db 3")
-	time.Sleep(9 * time.Second)
-	log.Println("Result set 3 returned")
-	results += "'db 3 result set' "
+	// "Call each database and add returned values to result set"
+	results += database1()
+	results += database2()
+	results += database3()
 
 	return Response{
 		Result:  results,
@@ -97,6 +84,24 @@ func functionWithHardTimeLimit() (Response, error) {
 		Runtime: time.Duration(runTime) * time.Second,
 		Result:  "Database Result returned successfully",
 	}, nil
+}
+
+func database1() string {
+	log.Println("calling db 1")
+	time.Sleep(8 * time.Second)
+	return "Result set 1 returned"
+}
+
+func database2() string {
+	log.Println("calling db 1")
+	time.Sleep(4 * time.Second)
+	return "Result set 2 returned"
+}
+
+func database3() string {
+	log.Println("calling db 3")
+	time.Sleep(9 * time.Second)
+	return "Result set 3 returned"
 }
 
 func randomTime(maxDuration int) (int, bool) {
