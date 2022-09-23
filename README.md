@@ -6,14 +6,16 @@ We have two functions in need of a refactor to improve our web API.
 
 For a solution we only want to use Go's standard library.
 
-### func multipleDatabaseCalls()
+### Go Waitgroups
+```func multipleDatabaseCalls()```
 
 This function currently calls multiple databases one after the other.
 The database calls do not depend on the returned results from the previous calls.
 
 How can we utilize Go's Waitgroups and Go Routines to allow the database calls to be made simultaneously?
 
-### func functionWithHardTimeLimit()
+### Go Channels
+```func functionWithHardTimeLimit()```
 
 This function is running in AWS using Lambda functions with a hard timeout of 10 seconds.
 
