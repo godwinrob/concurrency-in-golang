@@ -35,7 +35,7 @@ func main() {
 		err := fmt.Errorf("functionWithHardTimeLimit returned an error: %v", result2.ErrorMessage.Error())
 		log.Println(err)
 	} else {
-		log.Println("multipleDatabaseCalls success! result: " + result2.Result)
+		log.Println("functionWithHardTimeLimit success! result: " + result2.Result)
 		log.Printf("time to complete: %s", result2.Runtime)
 	}
 }
@@ -61,28 +61,16 @@ func multipleDatabaseCalls() (Response, error) {
 // This function will fail randomly when database response takes too long
 func functionWithHardTimeLimit() (Response, error) {
 	log.Println("Starting functionWithHardTimeLimit")
+	start := time.Now()
 
-	// Time in seconds that Lambda will be killed after
-	maxDuration := 10
+	// Database4 takes a varying amount of time to return its results
+	// if call takes longer than 10 seconds, lambda will be killed before it can return
+	// otherwise it will return its result set
+	result := database4()
 
-	// Randomize if run time will exceed max allowed run time
-	// runTime can randomly take between 1 and 19 seconds
-	// ok will return false if Runtime is longer than Max Duration
-	runTime, ok := randomTime(maxDuration)
-
-	// Simulated failed call
-	if !ok {
-		time.Sleep(10 * time.Second)
-		// Return is meant to simulate a non-existent response
-		// We would expect an error to return here for a timed-out response
-		panic("Function took too long and timed out. Response was not returned")
-	}
-
-	// Simulated successful response
-	time.Sleep(time.Duration(runTime) * time.Second)
 	return Response{
-		Runtime: time.Duration(runTime) * time.Second,
-		Result:  "Database Result returned successfully",
+		Runtime: time.Since(start),
+		Result:  result,
 	}, nil
 }
 
@@ -105,6 +93,27 @@ func database3() string {
 	time.Sleep(9 * time.Second)
 	log.Println("db 3 result set returned")
 	return "'db 3 result set '"
+}
+
+func database4() string {
+	// if run time exceeds max duration in seconds, function will panic
+	maxDuration := 10
+
+	// Generate a random runtime between 0 and 19 seconds
+	// if runtime generated is longer than 10 seconds, ok will be returned false
+	runTime, ok := randomTime(maxDuration)
+
+	// Simulated failed call
+	if !ok {
+		time.Sleep(10 * time.Second)
+		// Return is meant to simulate a non-existent response
+		// We would expect an error to return here for a timed-out response
+		panic("Function took too long and timed out. Response was not returned")
+	}
+
+	time.Sleep(time.Duration(runTime) * time.Second)
+	return "'db 4 result set' "
+
 }
 
 func randomTime(maxDuration int) (int, bool) {
