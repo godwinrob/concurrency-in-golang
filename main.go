@@ -22,10 +22,14 @@ type ResponseResult struct {
 	Error    error    `json:"error"`
 }
 
+type Interface struct{}
+
 func main() {
 
+	var i Interface
+
 	// Simulate a call to a function that calls multiple databases
-	result1, err := multipleDatabaseCalls()
+	result1, err := i.multipleDatabaseCalls()
 	if err != nil {
 		err := fmt.Errorf("multipleDatabaseCalls returned an error: %v", result1.ErrorMessage.Error())
 		log.Println(err)
@@ -37,7 +41,7 @@ func main() {
 	time.Sleep(2 * time.Second)
 
 	// Simulate a call to a function that will get killed after 10 seconds runtime
-	result2, err := functionWithHardTimeLimit()
+	result2, err := i.functionWithHardTimeLimit()
 	if err != nil {
 		err := fmt.Errorf("functionWithHardTimeLimit returned an error: %v", result2.ErrorMessage.Error())
 		log.Println(err)
@@ -48,7 +52,7 @@ func main() {
 }
 
 // This function will make a number of database calls one after another
-func multipleDatabaseCalls() (Response, error) {
+func (i Interface) multipleDatabaseCalls() (Response, error) {
 	log.Println("Starting multipleDatabaseCalls")
 	start := time.Now()
 
@@ -83,7 +87,7 @@ func multipleDatabaseCalls() (Response, error) {
 
 // This simulates the signature of functionWithHardTimeLimit to return before lambda timeout
 // kills the function
-func functionWithHardTimeLimit() (Response, error) {
+func (i Interface) functionWithHardTimeLimit() (Response, error) {
 	result := make(chan ResponseResult, 1)
 
 	go func() {
